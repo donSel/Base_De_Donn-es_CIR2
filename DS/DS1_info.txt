@@ -1,0 +1,17 @@
+CM 
+	Part1
+	Part2
+	Part3 - LDD (create, drop, alter)
+
+TD
+	TD1
+	TD2
+	TD3
+
+pas dans l'éval : 
+
+CM
+	Part3 - LID
+	
+TP
+	TP1

@@ -1,0 +1,71 @@
+/!\ doits => s'appliquent au roles | privileges => s'applique bdd ou une table par rapport à un rôle
+
+ -- ex1
+
+a)
+create database testbdd;
+create role testbdd_user login password '123';
+grant all privileges on all tables in schema public to testbdd_user;
+
+b)
+create table table1(
+id integer,
+name varchar(30),
+primary key (id));
+
+create table table2 (
+testbdd(> num integer,
+testbdd(> name varchar(30),
+testbdd(> primary key (num));
+
+c)
+create role table1_user login password '123';
+grant insert, select, update, delete on table table1 to table1_user;
+
+
+ -- ex2
+
+a)
+create view info_emp as select e.nom, e.fonction, e.salaire + e.comm as "salaire + commission", es.nom as "nom superi
+eur", s.type_service, s.ville from employe e, employe es, service s where e.numemp_sup = es.numemp and e.num_service = s.num_
+service;
+
+create view info_emp as select e.nom, e.fonction, e.salaire + coalesce(e.comm, 0) as "salaire + commission", es.nom as "nom superi
+eur", s.type_service, s.ville from employe e, employe es, service s where e.numemp_sup = es.numemp and e.num_service = s.num_
+service;
+
+b)
+select * from info_emp where type_service = 'siege';
+
+c)
+create role info_emp_viewer login;
+revoke all privileges on all tables in schema public from info_emp_viewer; 
+grant all privileges on table info_emp to info_emp_viewer; 
+
+ou 
+
+create role view_role ingerit login encrypted password 'psw';
+grant select on table employe_view to view_role;
+
+
+ -- ex3
+
+a)
+alter table employe add salaireetcom numeric(7,2);
+
+b)
+create function wrong_salaire() return trigger as $wrong_salaire$
+begin
+if new.salaireetcom < new.salire then
+raise exception '% ne peut pas avoir un salaire + commission inferieur au salaire !', new.nom;
+end if;
+return new;
+end;
+$wrong_salaire$ language plpsql;
+
+create trigger wrong_salaire before insert or update on employe for each row execute procedure wrong_salaire();
+
+
+
+
+

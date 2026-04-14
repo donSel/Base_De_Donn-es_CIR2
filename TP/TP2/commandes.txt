@@ -1,0 +1,82 @@
+	1)
+
+a)
+SELECT employe.nom, employe.fonction, service.ville
+FROM employe, service
+WHERE employe.num_service = service.num_service
+ORDER BY service.ville, employe.fonction;
+
+b)
+SELECT e.nom, e.fonction
+FROM employe e, service s
+WHERE e.num_service = s.num_service AND s.ville = 'Brest'; (lower('Brest') pour l'insensibilité à la casse
+
+c)
+SELECT e.nom, e.fonction
+FROM employe e, employe es
+tp1db-> WHERE e.numemp_sup = es.numemp AND es.fonction != lower('PDG');
+
+d)
+SELECT e.nom, e.fonction, es.nom as "nom_superieur", es.fonction as "fonction_superieur", s.ville
+FROM employe e, employe es, service s
+WHERE e.numemp_sup = es.numemp AND e.num_service = s.num_service
+ORDER BY e.fonction, e.nom;
+
+
+	2)
+
+a)
+SELECT num_service, COUNT(*)
+FROM employe
+GROUP BY num_service;
+
+b)
+SELECT s.ville, COUNT(*), ROUND(AVG(e.salaire), 2) 
+FROM service s, employe e
+WHERE e.num_service = s.num_service
+GROUP BY s.ville
+ORDER BY s.ville;
+
+
+	3)
+
+a)
+SELECT num_service, type_service
+FROM service
+WHERE num_service NOT IN (SELECT num_service
+			  FROM employe);
+	   
+
+	4)
+
+a)
+SELECT e.nom, e.fonction, es.nom as "nom_superieur", es.fonction as "fonction_superieur", s.ville
+FROM employe e LEFT JOIN employe es
+ON e.numemp_sup = es.numemp 
+JOIN service s ON e.num_service = s.num_service
+ORDER BY e.fonction, e.nom;
+
+
+b) 
+(sous select synchronisé)
+SELECT num_service, type_service 
+FROM service s
+WHERE (SELECT count(*) 
+       FROM employe 
+       WHERE num_service = s.num_service ) = 0;
+
+SELECT s.num_service, s.type_service
+FROM service s LEFT JOIN employe e
+éON s.num_service = e.num_service
+WHERE e.num_service IS NULL;
+
+SELECT num_service, type_service
+FROM service s
+WHERE not exists (SELECT *
+	         FROM employe e
+	         WHERE e.num_service = s.num_service);
+
+
+
+
+

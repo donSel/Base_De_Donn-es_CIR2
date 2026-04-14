@@ -1,0 +1,26 @@
+Exercice 1:
+d) sudo -u postgres psql
+e) CREATE DATABASE sakila;
+f) psql -d sakila -U postgres -f postgres-sakila-schema.sql
+g) psql -d sakila -U postgres -f postgres-sakila-insert-data.sql
+h) sudo -u postgres psql
+   CREATE ROLE sakiladmin INHERIT LOGIN PASSWORD 'password';
+i) \c sakila
+   GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA PUBLIC TO sakiladmin;
+   \q
+j) psql sakila sakiladmin
+
+Exercice 2.1:
+a) SELECT f.title, c.name FROM film f JOIN film_category fc ON f.film_id = fc.film_id JOIN category c ON fc.category_id = c.category_id;
+b) UPDATE actor SET first_name = 'BRAD' WHERE UPPER(first_name) = 'JAMES' AND UPPER(last_name) = 'PITT';
+c) SELECT last_name, first_name FROM actor WHERE actor_id IN (SELECT actor_id FROM film_actor fa JOIN film f ON fa.film_id = f.film_id WHERE LOWER(f.title) = 'amadeus holy');
+d) SELECT f.title, COUNT(*) AS actor_count FROM film_actor fa JOIN film f ON fa.film_id = f.film_id GROUP BY f.film_id ORDER BY COUNT(fa.actor_id) DESC;
+e) SELECT a.first_name, a.last_name, COUNT(*) AS film_count FROM film_actor fa JOIN actor a ON fa.actor_id = a.actor_id GROUP BY a.actor_id ORDER BY COUNT(a.actor_id) DESC LIMIT 10;
+
+Exercice 2.2:
+a) SELECT c.first_name, c.last_name, SUM(p.amount) FROM payment p JOIN customer c ON p.customer_id = c.customer_id GROUP BY c.customer_id ORDER BY SUM(p.amount) DESC;
+b) SELECT s.last_name, s.first_name, c.city, SUM(p.amount) FROM payment p JOIN staff s ON p.staff_id = s.staff_id JOIN store st ON s.store_id = st.store_id JOIN address a ON st.address_id = a.address_id JOIN city c ON a.city_id = c.city_id GROUP BY s.staff_id, c.city ORDER BY SUM(p.amount) DESC;
+c) SELECT s.last_name, s.first_name, SUM(p.amount) FROM payment p JOIN staff s ON p.staff_id = s.staff_id WHERE p.payment_date BETWEEN '2005-06-15' AND '2005-07-14' GROUP BY s.staff_id ORDER BY SUM(p.amount) DESC;
+d) SELECT p.payment_date::DATE, s.last_name, s.first_name, c.city, SUM(p.amount) FROM payment p CROSS JOIN (SELECT staff_id FROM staff) si LEFT JOIN staff s ON p.staff_id = s.staff_id JOIN store st ON s.store_id = st.store_id JOIN address a ON st.address_id = a.address_id JOIN city c ON a.city_id = c.city_id WHERE p.payment_date BETWEEN '2005-06-15' AND '2005-07-14' GROUP BY p.payment_date::DATE, s.staff_id, c.city ORDER BY p.payment_date::DATE, s.staff_id;
+e) SELECT f.title, COUNT(*) FROM rental r JOIN inventory i ON r.inventory_id = i.inventory_id JOIN film f ON i.film_id = f.film_id WHERE r.staff_id IN (SELECT s.staff_id FROM staff s JOIN store st ON s.store_id = st.store_id JOIN address a ON st.address_id = a.address_id WHERE a.address_id = 1) GROUP BY f.film_id ORDER BY COUNT(*) DESC LIMIT 10;
+f) SELECT s.store_id, ROUND(AVG(duration)) as "average_rental_duration" FROM (SELECT *, return_date::DATE - rental_date::DATE as "duration" FROM rental) r JOIN staff s on r.staff_id = s.staff_id WHERE r.return_date IS NOT NULL GROUP BY s.store_id ORDER BY average_rental_duration DESC;

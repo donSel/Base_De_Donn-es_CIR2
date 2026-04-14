@@ -1,0 +1,112 @@
+Exercice 1:
+d) 	sudo -u postgres psql
+
+e) 	CREATE DATABASE northwind;
+
+f) 	psql -d northwind -U postgres -f CTtpNorthwind.sql
+
+g) 	psql -d northwind -U postgres -f ITtpNorthwind.sql
+
+h) 	sudo -u postgres psql
+	CREATE ROLE nwadmin INHERIT LOGIN PASSWORD 'password';
+
+i)  connexion à la base de données : \c northwind
+	GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA PUBLIC TO nwadmin;
+	déconnexion : \q
+
+j) 	psql northwind nwadmin
+
+Exercice 2:
+a) 	\dt
+	Trois tables sont : categories, employees, products et sont stockées dans le schéma public
+
+b) 	\d customers
+	Une clé primaire : customer_id
+	Une clé étrangère : customer_id
+	Un index : customer_id
+	Une propriété : not null (customer_id) sur la colonne "Nullable" un booléen
+
+c)  Cette ligne signifie que customer_id est une clé étrangère et relie les tables customers et orders avec pour nom de contrainte fk_orders_customers.
+
+d)  SELECT COUNT(*) FROM employees;
+	Il y a 9 employés
+
+e) 	SELECT category_name FROM categories;
+	Il y a 8 catégories :
+	Beverages (Boissons)
+	Condiments (Condiments)
+	Confections (Confections)
+	Dairy Products (Produits laitiers)
+	Grains/Cereals (Grains/Céréales)
+	Meat/Poultry (Viande/Volailles)
+	Produce (Produits frais)
+	Seafood (Fruits de mer)
+
+f) 	CREATE VIEW products_info 
+		AS SELECT product_name, units_in_stock, units_on_order FROM products;
+
+g) 	CREATE ROLE nwuser1 INHERIT LOGIN PASSWORD 'password';
+	\c northwind
+	GRANT SELECT ON products_info TO nwuser1;
+	psql northwind nwuser1
+
+Exercice 3.1:
+a) 	SELECT p.product_name, p.product_id, c.category_name, p.unit_price 
+		FROM products p 
+		JOIN categories c 
+		ON p.category_id = c.category_id 
+		ORDER BY p.product_name;
+
+b) 	SELECT p.product_name, p.unit_price 
+		FROM products p 
+		JOIN categories c 
+		ON p.category_id = c.category_id 
+		WHERE LOWER(c.category_name) = 'dairy products' AND p.unit_price < 30 
+		ORDER BY p.unit_price;
+
+c) 	INSERT INTO shippers (shipper_id, company_name, phone) 
+		VALUES (7, 'French Shippers', '33-241-426-798');
+
+d) 	UPDATE employees 
+		SET first_name = 'Steve' 
+		WHERE LOWER(first_name) = 'steven' 
+		AND LOWER(last_name) = 'buchanan';
+
+Exercice 3.2:
+a) 	SELECT last_name, first_name 
+		FROM employees 
+		WHERE employee_id IN (
+			SELECT employee_id 
+				FROM employee_territories et 
+				JOIN territories t 
+				ON et.territory_id = t.territory_id 
+				JOIN region r 
+				ON t.region_id = r.region_id 
+				WHERE LOWER(r.region_description) = 'northern'
+		);
+
+b) 	Ici on utilise un `LEFT JOIN` pour inclure les catégories sans produits.
+	SELECT c.category_name, COUNT(*) AS "products_count" 
+		FROM categories c 
+		LEFT JOIN products p ON c.category_id = p.category_id 
+		GROUP BY c.category_id 
+		ORDER BY products_count DESC;
+
+c) 	SELECT p.product_name, SUM(od.quantity) 
+		FROM products p 
+		JOIN order_details od 
+		ON p.product_id = od.product_id 
+		GROUP BY p.product_id 
+		ORDER BY SUM(od.quantity) DESC 
+		LIMIT 10;
+
+bonus) 	SELECT p.product_name, SUM(od.quantity) 
+		FROM products p 
+		JOIN order_details od 
+		ON p.product_id = od.product_id 
+		JOIN suppliers s 
+		ON p.supplier_id = s.supplier_id 
+		WHERE LOWER(s.country) = 'france' 
+		GROUP BY p.product_id 
+		ORDER BY SUM(od.quantity) DESC 
+		LIMIT 5;

@@ -1,0 +1,17 @@
+Les transaction (modifier la bdd en s'assurant que le chagement est valide):
+
+begin;
+
+insert into employe (1000, 'Lejeune', 'directeur', 839, current_date, 2000, null, 40);
+
+update employe set comm = 100 where = 'Lejeune';
+
+savepoint my_savepoint;
+
+update employe set salaire = salaire + 20 where nom = 'Duguet';
+
+rollback to my_savepoint; (revient au dernier savepoint, donc la dernière commande n'est pas prise en compte)
+
+update employe set salaire = salaire + 25 where nom = 'Duguet';
+
+commit; (transaction fermée et l'enregistrement se fait sur la base de donnée)

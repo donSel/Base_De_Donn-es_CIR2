@@ -1,0 +1,6 @@
+contrainte d'intégrité : règle qui régissent la cohérence de la bdd
+contrainte de domaines (colonnes), ex : pas de valeur nulle sur clé primaire
+contraintes d'inicité : unicité clés (pas de doubles de clés), creation index => colonne en plus invisible pour aller plus vite dans la table 
+										lors des recherche (ex : nom triés par ordre alphabétique pour varchar)
+contrainte d'intégrité référentielle :  clés etrangère correspond a une clé étrangère d'une autre table
+actions référentielles : suppression en cascade, update entre clé

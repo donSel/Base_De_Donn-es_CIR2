@@ -1,0 +1,7 @@
+SELECT (*=> afficher toute les colonnes OU nom des colonnes a afficher)
+FROM (nom bd)
+WHERE 
+ORDER BY (desc)
+IS NOT NULL != Le%
+LIKE 
+AS

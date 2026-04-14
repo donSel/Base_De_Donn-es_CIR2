@@ -1,0 +1,16 @@
+	EX2
+a) SELECT nom, salaire FROM employe WHERE salaire between 1000 and 1500 
+	ORDER BY (2, 1 ou salaire, nom);
+b) SELECT nom, salaire, comm FROM employe WHERE comm is not null and com != 0 (ou > 0);
+c)  SELECT nom, date_embauche FROM employe WHERE date_embauche between '2001-1-1' and '2001-12-31' 
+	ORDER BY date_embauche;
+d) SELECT * FROM employe WHERE fonction != 'secretaire';
+e) SELECT nom FROM employe WHERE fonction = 'directeur' AND num_service in (20, 30);
+f) SELECT * FROM employe WHERE lower(nom) (ou upper) LIKE 'le%' ORDER BY LENGTH(nom), nom;
+g) SELECT nom, current_date - date_embauche as duree_embauche FROM employe 
+	ORDER BY duree_embauche (on peu mettre desc);
+h) SELECT nom, fonction, salaire + coalesce(comm, 0) as revenu_mensuel 
+	FROM employe ORDER BY revenu_mensuel;
+i) SELECT count(*) FROM employe WHERE comm > salaire / 4;
+j) SELECT min(salaire) as "salaire_min", max(salaire) as "salaire_max", round(AVG(salaire), 2) as "salaire_moy",
+	round(max(salaire) / min(salaire), 0) as "rapport_max/min" FROM employe;

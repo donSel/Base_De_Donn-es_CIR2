@@ -1,0 +1,58 @@
+ -- 1
+
+a) enregistrer sous dans windows
+b) cp dans linux
+c) sudo service postgresql start
+d) sudo -U postgres
+e) CREATE database northwind;
+f) psql -d northwind -U postgres CTtpNorthwind.sql
+g) psql -d northwind -U postgres -f ITtpNorthwind.sql
+h) CREATE ROLE nwadmin INHERIT LOGIN nosuperuser encrypted PASSWORD 'pass';
+i) grant all privileges on all tables in schema public to nwadmin;
+j) \q
+   psql northwind nwadmin
+
+ -- 2
+
+a) \dt on voit les tables employees, categories, orders
+b) \d | clé primaire, index : customer_id | pas de clé étrangère | propriété : company_name varchar(40)
+c) c'est une clé étrangère dans la table orders qui fait référence à customer_id dans la table customers
+d) select count(*) from employees => 9 employés
+e) select category_name from categories
+f) create view current_commands as select product_name, units_in_stocks, units_on_order from products;
+g) create role nwuser1 login encrypted password 'pass';
+   grant select on table current_commands to nwuser1;
+
+
+ -- 3
+
+ - 3.1
+
+a) select product_id, product_name, category_id, unit_price from products order by product_name;
+b) select product_name, unit_price from products p, categories c where p.category_id=c.category_id 
+   and c.category_name='Dairy Products' and p.unit_price < 30 order by unit_price; 
+
+   ou
+
+   select product_name, unit_price from products where category_id = 4 and unit_price < 30 order
+   by unit_price;
+c) insert into shippers values (7, 'French Shippers', '33-241-426-789');
+d) update amployees set first_name='Steve' where first_name='Steven' and last_name='Buchanan'
+
+ - 3.2
+
+a) select e.first_name, e.last_name 
+   from employees e 
+   join employee_territories et 
+   on e.employee_id=et.employee_id 
+   join territories t
+   on et.territory_id=t.territory_id 
+   where t.region_id in (select r.region_id from region r where lower(r.region_description)='northern');
+b) SELECT c.category_name, COUNT(*) AS "products_count"
+   FROM categories c
+   LEFT JOIN products p ON c.category_id = p.category_id
+   GROUP BY c.category_id
+   ORDER BY products_count DESC;
+c) select top p.product_name, sum(o.quantity) as number_sells from order_details o natural join products p group by p.product_id order by number_sells desc limit 10*;
+bonus) 
+

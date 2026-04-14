@@ -1,0 +1,24 @@
+ex1
+
+1) faux
+2) faux
+3) faux => base document
+4) vrai 
+5) vrai
+6) faux, attributs = propriétés modèle entité
+7) vrai, propriété qui n'a qu'une valeur
+8) vrai
+9) faux
+10) vrai
+
+
+ex2
+
+1) la table EFFECTUER aura 4 colonnes
+2) une valeur qui va s'auto-increment à chaque nouvel enregistrement
+3) un nombre 5 chiffres et 0 derrière la virgule
+4) contrainte clé primaire + étrangère + domaine de def (varchar(50))
+5) on peu pas faire référence à quelque chose qui n'existe pas 
+
+
+

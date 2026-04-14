@@ -1,0 +1,66 @@
+	1)
+
+a)
+begin;
+INSERT INTO employe (numemp, nom, fonction, numemp_sup, date_embauche, salaire, comm, num_service) 
+VALUES (667, 'Tronpa', 'directeur', 839, current_date, 3000.00, null, 40);
+
+b)
+
+INSERT INTO employe (numemp, nom, fonction, numemp_sup, date_embauche, salaire, comm, num_service) => pas obligé de mettre ca
+VALUES (668, 'Genius', 'ingenieur', 667, current_date, 2500, null, 40);
+
+c) slelect * from employe;
+
+d) select nom from employe;
+
+e) commit;
+
+f) slelect * from employe;
+
+g)
+
+La commande n'est pas acceptée car le service 50 n'existe pas dans la table service. Cela ne respecte pas la contrainte d'intégrité.
+
+
+	2)
+
+a)
+
+UPDATE employe SET salaire = salaire + salaire * 0.1;
+
+d)
+
+UPDATE employe SET numemp_sup = 999 WHERE nom = 'Dupont';
+
+e) La modification n'est pas acceptée car la clés étrangère 999 n'existe pas dans la table enmploye, donc cela ne respecte pas les 
+   contraintes d'intégrité.
+
+
+	3)
+
+a) DELETE FROM employe WHERE num_service = 40;
+La commande est acceptée car il y a bien des employés qui sont dans le service n°40.
+
+b) DELETE FROM employe WHERE fonction = lower('PDG');
+Cette commande ne fonctionne pas car des employé on pour clé étrangère le numemp du pdg, cela ne respecte la contrainte d'intégrité.
+
+update employe set numemp_sup = 566;
+where numemp_sup = 839;
+delete from employe where numemp_sup is null;
+
+{ou désactiver la clés étrangère.
+
+alter table employe disable trigger all;
+delete from employe where fonction = 'pdg';
+alter table employe enable trigger all;}
+
+
+	4)
+
+a)
+
+alter table employe drop constraint employe_numemp_sup_fkey
+alter table employe add constraint employe_numemp_sup_fkey foreign key
+(numemp_sup) references employe(numemp) on delete cascade;
+
